@@ -34,22 +34,41 @@ while ($Loop -ne 'Ended'){
 
   if ($Status -match 'All Systems Operational' ){
     $Content = '```CSS'+"`n"+"-"+$Status+"`n"+'```'
-    $Status = "Good"
+    $Stat = "Good"
   }
   Else{
     $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
-    $Status = "Bad"
+    $Stat = "Bad"
   }
 
   $DCContent = @"
   **Current status of [plex.tv](https://status.plex.tv):**$Content
 "@
 
-  if ($Status -eq 'Bad'){
-    #Send to Discord
-    $UserPayload = [PSCustomObject]@{content = $DCContent}
-    Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
+  if ($Stat -eq 'Bad'){
+    while ($Stat -ne 'Good'){
+      $WebRequest = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $StatusPage
+      $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
+      $Incident = ($WebRequest.AllElements | ? { $_.Class -eq 'incident-title font-large' } | select innerText).innertext
+
+      if ($Status -match 'All Systems Operational' ){
+         $Content = '```CSS'+"`n"+"-"+$Status+"`n"+'```'
+         
+         #Send to Discord
+         $UserPayload = [PSCustomObject]@{content = $DCContent}
+         Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
+         $Stat = "Good"
+      }
+      Else{
+        $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
+        
+        #Send to Discord
+        $UserPayload = [PSCustomObject]@{content = $DCContent}
+        Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
+        $Stat = "Bad"
+      }
+      sleep 60
+    }
   }
-  sleep 60
-  
+  sleep 60  
 }
