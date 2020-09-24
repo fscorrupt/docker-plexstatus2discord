@@ -4,7 +4,7 @@ $StatusPage = 'https://status.plex.tv'
 $Loop = $null
 
 # First Status Call
-$WebRequest = Invoke-WebRequest -Uri $StatusPage
+$WebRequest = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $StatusPage
 $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
 $Incident = ($WebRequest.AllElements | ? { $_.Class -eq 'incident-title font-large' } | select innerText).innertext
 
@@ -28,7 +28,7 @@ Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Meth
 
 while ($Loop -ne 'Ended'){
 
-  $WebRequest = Invoke-WebRequest -Uri $StatusPage
+  $WebRequest = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $StatusPage
   $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
   $Incident = ($WebRequest.AllElements | ? { $_.Class -eq 'incident-title font-large' } | select innerText).innertext
 
