@@ -10,11 +10,9 @@ $Incident = ($WebRequest.AllElements | ? { $_.Class -eq 'incident-title font-lar
 
   if ($Status -match 'All Systems Operational' ){
     $Content = '```CSS'+"`n"+"-"+$Status+"`n"+'```'
-    $Status = "Good"
   }
   Else{
     $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
-    $Status = "Bad"
   }
 
   $DCContent = @"
