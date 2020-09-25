@@ -53,7 +53,9 @@ while ($Loop -ne 'Ended'){
 
         if ($Status -match 'All Systems Operational' ){
           $Content = '```CSS'+"`n"+"-"+$Status+"`n"+'```'
-         
+          $DCContent = @"
+  **Current status of [plex.tv](https://status.plex.tv):**$Content
+"@
           #Send to Discord
           $UserPayload = [PSCustomObject]@{content = $DCContent}
           Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
@@ -61,7 +63,9 @@ while ($Loop -ne 'Ended'){
         }
         Else{
           $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
-        
+          $DCContent = @"
+  **Current status of [plex.tv](https://status.plex.tv):**$Content
+"@
           #Send to Discord
           $UserPayload = [PSCustomObject]@{content = $DCContent}
           Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
