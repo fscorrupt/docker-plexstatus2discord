@@ -67,7 +67,7 @@ while ($Loop -ne 'Ended'){
           Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
           $Stat = "Bad"
         }
-        sleep 60
+        sleep 300
     }
     Until($Stat -eq 'Good')
   }
