@@ -1,0 +1,16 @@
+---
+version: "3"
+services:
+  PlexStatus2Discord:
+    hostname: "PlexStatus2Discord"
+    container_name: "PlexStatus2Discord"
+    environment:
+      - "PGID=1000"
+      - "PUID=1000"
+      - "TZ=Europe/Berlin"
+      - "UMASK=022"
+      - "TERM=xterm"
+    image: "ghcr.io/fscorrupt/docker-PlexStatus2Discord:latest"
+    restart: "unless-stopped"
+    volumes:
+      - "/opt/appdata/PlexStatus2Discord/config:/config:rw"
