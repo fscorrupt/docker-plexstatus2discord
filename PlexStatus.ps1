@@ -122,4 +122,5 @@ Else {
   write-host "Stopping Container - Config file not Found!" -ForegroundColor Red
   Write-Host ""
   write-host "Please check config file, and fill out all variables - '/opt/appdata/plexstatus2discord/config/config.json'" -ForegroundColor Yellow
+  sleep 180
 }
