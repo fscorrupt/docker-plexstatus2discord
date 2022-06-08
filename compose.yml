@@ -10,7 +10,7 @@ services:
       - "TZ=Europe/Berlin"
       - "UMASK=022"
       - "TERM=xterm"
-    image: "ghcr.io/fscorrupt/docker-PlexStatus2Discord:latest"
+    image: "ghcr.io/fscorrupt/docker-plexstatus2discord:latest"
     restart: "unless-stopped"
     volumes:
       - "/opt/appdata/PlexStatus2Discord/config:/config:rw"
