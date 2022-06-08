@@ -1,5 +1,16 @@
 # Enter the path to the config file for Tautulli and Discord
 [string]$strPathToConfig = "$PSScriptRoot\config\config.json"
+  $json = @"
+{
+   "ScriptSettings" : {
+      "PlexStatus" : {
+         "Webhook" : "https://discord.com/api/webhooks/<redacted>",
+		 "WebhookAnnounce" : "https://discord.com/api/webhooks/<redacted>"
+      }
+   }
+}
+"@
+$json | Out-File "$PSScriptRoot\config\config.json.template"
 
 if (test-path $strPathToConfig){
 
