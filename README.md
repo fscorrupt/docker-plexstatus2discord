@@ -1,3 +1,5 @@
+# Currently an Alpha Version, does not work in powershell core!!!!
+
 # PlexStatus2Discord
 Send the Status from **status.plex.tv** to **Discord**
 
