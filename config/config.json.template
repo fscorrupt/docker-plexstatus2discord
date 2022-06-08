@@ -1,8 +1,8 @@
 {
-   "ScriptSettings" : {
-      "PlexStatus" : {
-         "Webhook" : "https://discord.com/api/webhooks/<redacted>",
-		 "WebhookAnnounce" : "https://discord.com/api/webhooks/<redacted>"
-      }
-   }
+	"ScriptSettings": {
+		"PlexStatus": {
+			"Webhook": "https://discord.com/api/webhooks/<redacted>",
+			"WebhookAnnounce": "https://discord.com/api/webhooks/<redacted>"
+		}
+	}
 }
