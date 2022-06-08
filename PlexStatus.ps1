@@ -1,11 +1,22 @@
+# Enter the path to the config file for Tautulli and Discord
+[string]$strPathToConfig = "$PSScriptRoot\config\config.json"
+
+# Script name MUST match what is in config.json under "ScriptSettings"
+[string]$strScriptName = 'PlexStatus'
+
+# Parse the config file and assign variables
+[object]$objConfig = Get-Content -Path $strPathToConfig -Raw | ConvertFrom-Json
+[string]$strDiscordWebhook = $objConfig.ScriptSettings.$strScriptName.Webhook
+[string]$strDiscordWebhookAnnounce = $objConfig.ScriptSettings.$strScriptName.WebhookAnnounce
+
 # Discord Webhook Uri
-$Uri = 'https://discordapp.com/api/webhooks/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-$AnnouncementUri = 'https://discordapp.com/api/webhooks/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+$Uri = $strDiscordWebhook
+$AnnouncementUri = $strDiscordWebhookAnnounce
 $StatusPage = 'https://status.plex.tv'
 $Loop = $null
 
 # First Status Call
-$WebRequest = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $StatusPage
+$WebRequest = Invoke-WebRequest -Uri $StatusPage
 $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
 $Incident = ($WebRequest.AllElements | ? { ($_.Class -eq 'incident-title font-large') -or ($_.class -eq 'page-status status-major') -or ($_.class -eq 'page-status status-minor')  } | select innerText).innertext
 
@@ -29,7 +40,7 @@ Invoke-RestMethod -Uri $uri -Body ($UserPayload | ConvertTo-Json -Depth 4) -Meth
 
 while ($Loop -ne 'Ended'){
 
-  $WebRequest = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $StatusPage
+  $WebRequest = Invoke-WebRequest -Uri $StatusPage
   $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
   $Incident = ($WebRequest.AllElements | ? { ($_.Class -eq 'incident-title font-large') -or ($_.class -eq 'page-status status-major')  -or ($_.class -eq 'page-status status-minor') } | select innerText).innertext
 
@@ -56,7 +67,7 @@ while ($Loop -ne 'Ended'){
           $AUserPayload = [PSCustomObject]@{content = $ADCContent}
           Invoke-RestMethod -Uri $AnnouncementUri -Body ($AUserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
     do {
-        $WebRequest = Microsoft.PowerShell.Utility\Invoke-WebRequest -Uri $StatusPage
+        $WebRequest = Invoke-WebRequest -Uri $StatusPage
         $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
         $Incident = ($WebRequest.AllElements | ? { ($_.Class -eq 'incident-title font-large') -or ($_.class -eq 'page-status status-major')  -or ($_.class -eq 'page-status status-minor') } | select innerText).innertext
 

@@ -2,7 +2,7 @@
 Send the Status from **status.plex.tv** to **Discord**
 
 # Configuration
-You need to specify Discord **Webhook Uri** in Script.
+You need to specify Discord **Webhook Uri** in config.json.
 
 # HowTo Discord Webhook 
 Information on how to set up a Discord webhook can be found be [here.](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
