@@ -36,10 +36,10 @@ if (test-path $strPathToConfig){
   [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext -replace "`n|`r|            "
    
   if ($Status -match 'All Systems Operational' ){
-    $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
+    $Content = '```DIFF'+"`n"+"! "+$Status+"`n"+'```'
   }
   Else{
-    $Content = '```DIFF'+"`n"+"-"+$Status+"`n"+'```'
+    $Content = '```DIFF'+"`n"+"- "+$Status+"`n"+'```'
   }
 
   $DCContent = @"
@@ -60,11 +60,11 @@ if (test-path $strPathToConfig){
     [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext -replace "`n|`r|            "
 
     if ($Status -match 'All Systems Operational' ){
-      $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
+      $Content = '```DIFF'+"`n"+"! "+$Status+"`n"+'```'
       $Stat = "Good"
     }
     Else{
-      $Content = '```DIFF'+"`n"+"-"+$Status+"`n"+'```'
+      $Content = '```DIFF'+"`n"+"- "+$Status+"`n"+'```'
       $Stat = "Bad"
     }
 
@@ -87,7 +87,7 @@ if (test-path $strPathToConfig){
         [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext -replace "`n|`r|            "
 
         if ($Status -match 'All Systems Operational' ){
-          $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
+          $Content = '```DIFF'+"`n"+"! "+$Status+"`n"+'```'
           $DCContent = @"
   **Current status of [plex.tv](https://status.plex.tv):**$Content
 "@
@@ -104,7 +104,7 @@ if (test-path $strPathToConfig){
           $Stat = "Good"
         }
         Else{
-          $Content = '```DIFF'+"`n"+"-"+$Status+"`n"+'```'
+          $Content = '```DIFF'+"`n"+"- "+$Status+"`n"+'```'
           $DCContent = @"
   **Current status of [plex.tv](https://status.plex.tv):**$Content
 "@
