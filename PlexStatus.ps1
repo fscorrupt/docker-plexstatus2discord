@@ -13,7 +13,7 @@
 $json | Out-File "$PSScriptRoot\config\config.json.template"
 
 if (test-path $strPathToConfig){
-
+  Import-Module PowerHTML
   # Script name MUST match what is in config.json under "ScriptSettings"
   [string]$strScriptName = 'PlexStatus'
 
@@ -29,15 +29,17 @@ if (test-path $strPathToConfig){
   $Loop = $null
 
   # First Status Call
-  $WebRequest = Invoke-WebRequest -Uri $StatusPage
-  $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
-  $Incident = ($WebRequest.AllElements | ? { ($_.Class -eq 'incident-title font-large') -or ($_.class -eq 'page-status status-major') -or ($_.class -eq 'page-status status-minor')  } | select innerText).innertext
-
+  $wc = New-Object System.Net.WebClient
+  $res = $wc.DownloadString($($StatusPage))
+  $html = ConvertFrom-Html -Content $res
+  
+  [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext
+   
   if ($Status -match 'All Systems Operational' ){
     $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
   }
   Else{
-    $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
+    $Content = '```DIFF'+"`n"+"-"+$Status+"`n"+'```'
   }
 
   $DCContent = @"
@@ -53,36 +55,36 @@ if (test-path $strPathToConfig){
 
   while ($Loop -ne 'Ended'){
 
-    $WebRequest = Invoke-WebRequest -Uri $StatusPage
-    $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
-    $Incident = ($WebRequest.AllElements | ? { ($_.Class -eq 'incident-title font-large') -or ($_.class -eq 'page-status status-major')  -or ($_.class -eq 'page-status status-minor') } | select innerText).innertext
+    $res = $wc.DownloadString($($StatusPage))
+    $html = ConvertFrom-Html -Content $res
+    [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext
 
     if ($Status -match 'All Systems Operational' ){
       $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
       $Stat = "Good"
     }
     Else{
-      $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
+      $Content = '```DIFF'+"`n"+"-"+$Status+"`n"+'```'
       $Stat = "Bad"
     }
 
 
-          $DCContent = @"
+    $DCContent = @"
   **Current status of [plex.tv](https://status.plex.tv):**$Content
 "@
-          $ADCContent = @"
+    $ADCContent = @"
  **Current status of [plex.tv](https://status.plex.tv):**$Content
 "@
 
     if ($Stat -eq 'Bad'){
 
-          #Send to Discord Announcement Channel
-          $AUserPayload = [PSCustomObject]@{content = $ADCContent}
-          Invoke-RestMethod -Uri $AnnouncementUri -Body ($AUserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
+      #Send to Discord Announcement Channel
+      $AUserPayload = [PSCustomObject]@{content = $ADCContent}
+      Invoke-RestMethod -Uri $AnnouncementUri -Body ($AUserPayload | ConvertTo-Json -Depth 4) -Method Post -ContentType 'Application/Json'
       do {
-        $WebRequest = Invoke-WebRequest -Uri $StatusPage
-        $Status = ($WebRequest.AllElements | ? { $_.Class -eq 'status font-large' } | select innerText).innertext
-        $Incident = ($WebRequest.AllElements | ? { ($_.Class -eq 'incident-title font-large') -or ($_.class -eq 'page-status status-major')  -or ($_.class -eq 'page-status status-minor') } | select innerText).innertext
+        $res = $wc.DownloadString($($StatusPage))
+        $html = ConvertFrom-Html -Content $res
+        [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext
 
         if ($Status -match 'All Systems Operational' ){
           $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
@@ -102,7 +104,7 @@ if (test-path $strPathToConfig){
           $Stat = "Good"
         }
         Else{
-          $Content = '```DIFF'+"`n"+"-"+$Incident+"`n"+'```'
+          $Content = '```DIFF'+"`n"+"-"+$Status+"`n"+'```'
           $DCContent = @"
   **Current status of [plex.tv](https://status.plex.tv):**$Content
 "@
