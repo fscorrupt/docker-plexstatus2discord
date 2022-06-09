@@ -33,7 +33,7 @@ if (test-path $strPathToConfig){
   $res = $wc.DownloadString($($StatusPage))
   $html = ConvertFrom-Html -Content $res
   
-  [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext
+  [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext -replace "`n|`r|            "
    
   if ($Status -match 'All Systems Operational' ){
     $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
@@ -57,7 +57,7 @@ if (test-path $strPathToConfig){
 
     $res = $wc.DownloadString($($StatusPage))
     $html = ConvertFrom-Html -Content $res
-    [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext
+    [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext -replace "`n|`r|            "
 
     if ($Status -match 'All Systems Operational' ){
       $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
@@ -84,7 +84,7 @@ if (test-path $strPathToConfig){
       do {
         $res = $wc.DownloadString($($StatusPage))
         $html = ConvertFrom-Html -Content $res
-        [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext
+        [string]$Status = ($html.SelectNodes('/html/body/div[1]/div[2]/div[1]/span[1]')).innertext -replace "`n|`r|            "
 
         if ($Status -match 'All Systems Operational' ){
           $Content = '```DIFF'+"`n"+"!"+$Status+"`n"+'```'
