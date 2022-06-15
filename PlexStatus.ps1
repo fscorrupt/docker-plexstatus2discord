@@ -21,6 +21,7 @@ if (test-path $strPathToConfig){
   [object]$objConfig = Get-Content -Path $strPathToConfig -Raw | ConvertFrom-Json
   [string]$strDiscordWebhook = $objConfig.ScriptSettings.$strScriptName.Webhook
   [string]$strDiscordWebhookAnnounce = $objConfig.ScriptSettings.$strScriptName.WebhookAnnounce
+  [string]$Messagetext = 'Overall System status'
 
   # Discord Webhook Uri
   $Uri = $strDiscordWebhook
@@ -43,7 +44,7 @@ if (test-path $strPathToConfig){
   }
 
   $DCContent = @"
-  **Current status of [plex.tv](https://status.plex.tv):**$Content
+  **$Messagetext [plex.tv](https://status.plex.tv):**$Content
 "@
 
   #Send to Discord, each time the Script is starting
@@ -70,10 +71,10 @@ if (test-path $strPathToConfig){
 
 
     $DCContent = @"
-  **Current status of [plex.tv](https://status.plex.tv):**$Content
+  **$Messagetext [plex.tv](https://status.plex.tv):**$Content
 "@
     $ADCContent = @"
- **Current status of [plex.tv](https://status.plex.tv):**$Content
+ **$Messagetext [plex.tv](https://status.plex.tv):**$Content
 "@
 
     if ($Stat -eq 'Bad'){
@@ -89,10 +90,10 @@ if (test-path $strPathToConfig){
         if ($Status -match 'All Systems Operational' ){
           $Content = '```DIFF'+"`n"+"! "+$Status+"`n"+'```'
           $DCContent = @"
-  **Current status of [plex.tv](https://status.plex.tv):**$Content
+  **$Messagetext [plex.tv](https://status.plex.tv):**$Content
 "@
           $ADCContent = @"
- **Current status of [plex.tv](https://status.plex.tv):**$Content
+ **$Messagetext [plex.tv](https://status.plex.tv):**$Content
 "@
           #Send to Discord
           $UserPayload = [PSCustomObject]@{content = $DCContent}
@@ -106,7 +107,7 @@ if (test-path $strPathToConfig){
         Else{
           $Content = '```DIFF'+"`n"+"- "+$Status+"`n"+'```'
           $DCContent = @"
-  **Current status of [plex.tv](https://status.plex.tv):**$Content
+  **$Messagetext [plex.tv](https://status.plex.tv):**$Content
 "@
           #Send to Discord
           $UserPayload = [PSCustomObject]@{content = $DCContent}
