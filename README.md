@@ -1,7 +1,7 @@
 # Currently an Alpha Version!!!!
 
 # PlexStatus2Discord
-Send the Status from **status.plex.tv** to **Discord**
+Send the Status from [status.plex.tv](https://status.plex.tv/) to **Discord**
 
 # Configuration
 You need to specify Discord **Webhook Uri** in config.json.
